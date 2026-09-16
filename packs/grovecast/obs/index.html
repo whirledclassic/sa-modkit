@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>GroveCast</title>
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: "Segoe UI", Tahoma, sans-serif; color: #d8f5d8; }
+  #slate { position: absolute; left: 24px; bottom: 28px; min-width: 320px; padding: 10px 14px 12px; background: rgba(10, 18, 10, 0.72); border-left: 4px solid #b6ff6b; }
+  .kicker { font-size: 11px; letter-spacing: 0.18em; color: #7a9a7a; text-transform: uppercase; }
+  .live { display: inline-block; width: 8px; height: 8px; background: #ff4d4d; border-radius: 50%; margin-right: 6px; }
+  .dim .live { background: #445; }
+  h1 { margin: 4px 0 6px; font-size: 22px; font-weight: 600; color: #b6ff6b; }
+  .row { font-size: 14px; color: #cfe8cf; }
+  .stars { letter-spacing: 2px; color: #ffd36b; }
+</style>
+</head>
+<body>
+  <div id="slate" class="dim">
+    <div class="kicker"><span class="live"></span>GroveCast</div>
+    <h1 id="title">waiting for San Andreas</h1>
+    <div class="row" id="line">OBS Browser Source. 1280 x 200. Transparent.</div>
+  </div>
+<script>
+function stars(n) {
+  n = parseInt(n || 0, 10);
+  if (n < 1) return "no heat";
+  var s = "";
+  for (var i = 0; i < n && i < 6; i++) s += "*";
+  return s;
+}
+function zone(x, y) {
+  x = parseInt(x || 0, 10); y = parseInt(y || 0, 10);
+  if (y < -1500) return "Flint / Whetstone";
+  if (x > 1200 && y > 600) return "Las Venturas";
+  if (x < -1200 && y > 200) return "San Fierro";
+  if (x > -800 && x < 1600 && y > -1200 && y < 900) return "Los Santos";
+  if (y > 1400) return "Tierra Robada";
+  return "San Andreas  " + x + "," + y;
+}
+function tick() {
+  var req = new XMLHttpRequest();
+  req.open("GET", "/cast.json?t=" + Date.now(), true);
+  req.onreadystatechange = function () {
+    if (req.readyState !== 4) return;
+    var box = document.getElementById("slate");
+    var title = document.getElementById("title");
+    var line = document.getElementById("line");
+    if (req.status !== 200) {
+      title.textContent = "bridge idle";
+      line.textContent = "Run START_CAST.bat  ·  start the game";
+      box.className = "dim";
+      return;
+    }
+    var d = {};
+    try { d = JSON.parse(req.responseText); } catch (e) { return; }
+    box.className = parseInt(d.slate || 0, 10) === 1 ? "" : "dim";
+    title.textContent = zone(d.x, d.y);
+    var drive = parseInt(d.driving || 0, 10) === 1 ? "wheels" : "on foot";
+    var inside = parseInt(d.interior || 0, 10) > 0 ? "inside" : "street";
+    line.innerHTML = "<span class='stars'>" + stars(d.wanted) + "</span>  ·  $" + (d.money || 0) + "  ·  " + drive + "  ·  " + inside;
+  };
+  req.send();
+}
+setInterval(tick, 700);
+tick();
+</script>
+</body>
+</html>
