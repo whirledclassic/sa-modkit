@@ -1,18 +1,18 @@
-SA MODKIT
-=========
-Windows 7 SP1, Windows 8.1, Windows 10, Windows 11.
+SA MODKIT — play, do not compile
+================================
 
-1. Own Grand Theft Auto: San Andreas PC 1.0.
-2. Install CLEO 4.4 from https://cleo.li
-3. Install Sanny Builder 3 or 4 from https://sannybuilder.com
-4. Clone as siblings:
+You need:
+  1. GTA San Andreas PC 1.0
+  2. CLEO 4.4  (CLEO.asi next to gta_sa.exe)
+     https://cleo.li
 
-     mods\sa-modkit
-     mods\gta-sa-win7-mods
-     mods\sa-aw-fps
+Then double-click:
 
-5. Double-click START.bat
-6. Browse to the folder that CONTAINS gta_sa.exe
-7. Tick packs, Install
+  COPY_TO_GAME.bat
 
-Windows 7 Python: 2.7.18 or 3.8.10 only. 3.9+ dropped Windows 7.
+Pick the folder that contains gta_sa.exe. That is the whole install.
+
+START.bat opens the same installer as a window. If a pack has a file
+in prebuilt\, it is copied. Sanny is not used.
+
+Sanny Builder is only for people who edit the .txt sources.
