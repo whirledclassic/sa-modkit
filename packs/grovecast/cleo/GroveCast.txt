@@ -1,0 +1,85 @@
+{$CLEO .cs}
+// GroveCast 0.1 — writes CLEO\GroveLink\cast.ini for the OBS page
+// F3 = slate flag. Leaves F4 / F6 / K alone.
+0000: NOP
+
+int 0@ = 0
+int 1@ = 0
+int 2@ = 0
+int 3@ = 0
+int 4@ = 0
+int 5@ = 0
+int 6@ = 0
+int 7@ = 0
+int 8@ = 0
+float 9@ = 0.0
+float 10@ = 0.0
+float 11@ = 0.0
+int 12@ = 0
+int 13@ = 0
+
+:GC_BOOT
+wait 0
+if
+  Player.Defined($PLAYER_CHAR)
+else_jump @GC_BOOT
+wait 400
+0AD1: show_formatted_text_highpriority "GroveCast  F3 live slate" time 2500
+
+:GC_LOOP
+wait 100
+if
+  Player.Defined($PLAYER_CHAR)
+else_jump @GC_LOOP
+
+0AB0: 12@ = key_pressed 0x72
+if and
+  12@ == 1
+  13@ == 0
+then
+  13@ = 1
+  if
+    0@ == 0
+  then
+    0@ = 1
+    0AD1: show_formatted_text_highpriority "LIVE SLATE ON" time 1000
+  else
+    0@ = 0
+    0AD1: show_formatted_text_highpriority "LIVE SLATE OFF" time 1000
+  end
+end
+if
+  12@ == 0
+then
+  13@ = 0
+end
+
+00A0: store_actor $PLAYER_ACTOR position_to 9@ 10@ 11@
+01C0: 1@ = player $PLAYER_CHAR wanted_level
+010B: 2@ = player $PLAYER_CHAR money
+077E: get_active_interior_to 3@
+4@ = 0
+if
+  00DF:   actor $PLAYER_ACTOR driving
+then
+  4@ = 1
+end
+5@ = 9@
+6@ = 10@
+7@ = 11@
+
+8@ += 1
+if
+  8@ > 5
+then
+  8@ = 0
+  0AF1: write_int_to_ini_file 1@ "cleo\GroveLink\cast.ini" "cast" "wanted"
+  0AF1: write_int_to_ini_file 2@ "cleo\GroveLink\cast.ini" "cast" "money"
+  0AF1: write_int_to_ini_file 3@ "cleo\GroveLink\cast.ini" "cast" "interior"
+  0AF1: write_int_to_ini_file 4@ "cleo\GroveLink\cast.ini" "cast" "driving"
+  0AF1: write_int_to_ini_file 5@ "cleo\GroveLink\cast.ini" "cast" "x"
+  0AF1: write_int_to_ini_file 6@ "cleo\GroveLink\cast.ini" "cast" "y"
+  0AF1: write_int_to_ini_file 7@ "cleo\GroveLink\cast.ini" "cast" "z"
+  0AF1: write_int_to_ini_file 0@ "cleo\GroveLink\cast.ini" "cast" "slate"
+end
+jump @GC_LOOP
