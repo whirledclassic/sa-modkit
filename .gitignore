@@ -1,0 +1,11 @@
+GTA_DIR.txt
+vendor/
+__pycache__/
+*.pyc
+*.pyo
+*.cs
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.zip
