@@ -1,6 +1,6 @@
 {$CLEO .cs}
-// GroveCast 0.1 — writes CLEO\GroveLink\cast.ini for the OBS page
-// F3 = slate flag. Leaves F4 / F6 / K alone.
+// GroveCast 0.1.1 — writes CLEO\GroveLink\cast.ini
+// F3 = slate. Leaves F4 / F6 / K alone.
 0000: NOP
 
 int 0@ = 0
@@ -64,9 +64,9 @@ if
 then
   4@ = 1
 end
-5@ = 9@
-6@ = 10@
-7@ = 11@
+0092: 5@ = float_to_integer 9@
+0092: 6@ = float_to_integer 10@
+0092: 7@ = float_to_integer 11@
 
 8@ += 1
 if
