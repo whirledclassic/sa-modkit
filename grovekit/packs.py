@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-"""Register new mods here. See docs/PACK_FORMAT.md."""
 from __future__ import print_function
 
 import os
@@ -17,20 +16,20 @@ def discover_pack_roots():
     root = kit_root()
     parent = join(root, os.pardir)
     return {
-        "grovelink": _first_existing(
-            [
-                join(parent, "gta-sa-win7-mods"),
-                join(root, "vendor", "gta-sa-win7-mods"),
-                join(root, "packs", "gta-sa-win7-mods"),
-            ]
-        ),
-        "awfps": _first_existing(
-            [
-                join(parent, "sa-aw-fps"),
-                join(root, "vendor", "sa-aw-fps"),
-                join(root, "packs", "sa-aw-fps"),
-            ]
-        ),
+        "grovelink": _first_existing([
+            join(parent, "gta-sa-win7-mods"),
+            join(root, "vendor", "gta-sa-win7-mods"),
+            join(root, "packs", "gta-sa-win7-mods"),
+        ]),
+        "awfps": _first_existing([
+            join(parent, "sa-aw-fps"),
+            join(root, "vendor", "sa-aw-fps"),
+            join(root, "packs", "sa-aw-fps"),
+        ]),
+        "grovecast": _first_existing([
+            join(root, "packs", "grovecast"),
+            join(parent, "grovecast"),
+        ]),
     }
 
 
@@ -38,6 +37,7 @@ def catalog():
     roots = discover_pack_roots()
     gl = roots["grovelink"]
     aw = roots["awfps"]
+    gc = roots["grovecast"]
     return [
         {
             "id": "grovelink",
@@ -75,7 +75,7 @@ def catalog():
         },
         {
             "id": "aw-fps",
-            "name": "SA \u00b7 AW FPS",
+            "name": "SA AW FPS",
             "blurb": "Exo dash/boost, hitmarkers, 8/9/0 classes. Toggle F4.",
             "root": aw,
             "repo": "https://github.com/whirledclassic/sa-aw-fps",
@@ -87,6 +87,16 @@ def catalog():
                 ("cleo/AW_FPS_HUD.txt", "CLEO/AW_FPS_HUD.cs"),
                 ("cleo/AW_FPS_Loadout.txt", "CLEO/AW_FPS_Loadout.cs"),
             ],
+        },
+        {
+            "id": "grovecast",
+            "name": "GroveCast OBS slate",
+            "blurb": "F3 live lower-third. OBS browser on port 8099. Not a chaos pack.",
+            "root": gc,
+            "repo": "https://github.com/whirledclassic/sa-modkit",
+            "keys": "F3 slate",
+            "files": [("obs/index.html", "CLEO/GroveLink/obs/index.html", False)],
+            "compile": [("cleo/GroveCast.txt", "CLEO/GroveCast.cs")],
         },
     ]
 
