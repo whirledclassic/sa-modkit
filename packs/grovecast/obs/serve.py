@@ -10,7 +10,10 @@ HERE = os.path.abspath(os.path.dirname(__file__))
 PORT = 8099
 
 def find_cast_ini():
-    candidates = []
+    candidates = [
+        os.path.abspath(os.path.join(HERE, os.pardir, "cast.ini")),
+        os.path.join(HERE, "cast.ini"),
+    ]
     kit = os.path.abspath(os.path.join(HERE, os.pardir, os.pardir, os.pardir))
     remembered = os.path.join(kit, "GTA_DIR.txt")
     if os.path.isfile(remembered):
@@ -28,7 +31,7 @@ def find_cast_ini():
     for path in candidates:
         if os.path.isfile(path):
             return path
-    return candidates[0] if candidates else os.path.join(HERE, "cast.ini")
+    return candidates[0]
 
 def read_ini(path):
     data, current = {}, None
