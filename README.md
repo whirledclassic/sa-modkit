@@ -2,41 +2,11 @@
 
 Win7-and-newer **mod client** for the whirledclassic GTA San Andreas packs.
 
-You pick the game folder. You tick packs. It copies files and compiles CLEO.
+You pick the game folder. **You tick only the packs you want.** Unticked packs are not copied.
 
 **Repo:** https://github.com/whirledclassic/sa-modkit
 
 Does **not** ship `gta_sa.exe`, `.img`, or anyone else’s closed assets.
-
-## Why this exists
-
-Each pack had its own INSTALL.bat / COMPILE.bat. Those still work. This kit is the shared front door:
-
-- One destination picker (Browse dialog, works on Windows 7)
-- One compatibility check (1.0 vs Steam 3.0, CLEO, SilentPatch, Sanny)
-- One place to register a **new** pack when you write the next mod
-- Same code path on Windows 7 SP1 and Windows 11
-
-## Supported Windows
-
-| OS | Python | Notes |
-|---|---|---|
-| Windows 7 SP1 | **2.7.18** or **3.8.10** | 3.9+ dropped Win7 |
-| Windows 8.1 | 2.7 / 3.4–3.8 | |
-| Windows 10 / 11 | 3.8–3.12 | Tick Add python.exe to PATH |
-
-No .NET 6, no WinUI, no PowerShell 7. Folder dialog falls back to PowerShell 2 FolderBrowserDialog if tkinter is missing.
-
-## Layout on disk
-
-```
-mods/
-  sa-modkit/                 double-click START.bat here
-  gta-sa-win7-mods/          GroveLink + switcher
-  sa-aw-fps/                 exo FPS layer
-```
-
-The engine looks at `../gta-sa-win7-mods` and `../sa-aw-fps`. You can also drop copies under `sa-modkit/vendor/`.
 
 ## Run
 
@@ -44,17 +14,32 @@ The engine looks at `../gta-sa-win7-mods` and `../sa-aw-fps`. You can also drop 
 START.bat
 ```
 
-Or:
+Boxes start **unchecked**. Tick GroveLink, or AW FPS, or both — then Install selected. Confirm the list.
+
+Shortcuts: **None** clears ticks. **Ready** ticks every pack whose source is on disk. Missing clones are greyed out.
+
+CLI (same rule — no silent install-everything):
 
 ```
-python -m grovekit
-python -m grovekit.cli --browse --all
-python -m grovekit.cli --gta "D:\GTA San Andreas" --pack grovelink --pack aw-fps
 python -m grovekit.cli --list
-python -m grovekit.cli --gta "D:\GTA San Andreas" --verify
+python -m grovekit.cli --browse --pack grovelink
+python -m grovekit.cli --browse --pack aw-fps
+python -m grovekit.cli --browse
+python -m grovekit.cli --gta "D:\GTA San Andreas" --pack grovelink --pack aw-fps --yes
 ```
 
-## Packs it knows today
+`--browse` with no `--pack` prints a numbered list. Type `1 4` or `grovelink aw-fps`. Empty line cancels. `--all` still asks `OK?` unless you pass `--yes`.
+
+## Layout on disk
+
+```
+mods/
+  sa-modkit/
+  gta-sa-win7-mods/
+  sa-aw-fps/
+```
+
+## Packs
 
 | id | In-game |
 |---|---|
@@ -63,19 +48,15 @@ python -m grovekit.cli --gta "D:\GTA San Andreas" --verify
 | `switcher-full` | **H** become them — skipped if the source is still a stub |
 | `aw-fps` | Exo dash/boost, **F4** toggle, **8/9/0** classes |
 
-Key split: GroveLink **K**, switcher **H/F6**, AW pack **F4**.
+Skin and full switcher write the same `.cs`. Ticking one unticks the other.
 
-## Add your next mod
+## Windows
 
-1. Put the repo next to `sa-modkit` (or under `vendor/`).
-2. Open `grovekit/engine.py` → `catalog()` and append a dict.
-3. `python -m grovekit.cli --list` until it prints READY.
+| OS | Python |
+|---|---|
+| Windows 7 SP1 | 2.7.18 or 3.8.10 |
+| Windows 10 / 11 | 3.8–3.12 |
 
-See [docs/PACK_FORMAT.md](docs/PACK_FORMAT.md).
+Add a pack in `grovekit/packs.py` → `catalog()`. See [docs/PACK_FORMAT.md](docs/PACK_FORMAT.md).
 
-## Related
-
-- https://github.com/whirledclassic/gta-sa-win7-mods
-- https://github.com/whirledclassic/sa-aw-fps
-
-MIT for this kit’s original code.
+Related: [gta-sa-win7-mods](https://github.com/whirledclassic/gta-sa-win7-mods) · [sa-aw-fps](https://github.com/whirledclassic/sa-aw-fps)
