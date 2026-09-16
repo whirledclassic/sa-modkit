@@ -13,7 +13,7 @@ def main():
         raise
     except Exception:
         from grovekit.cli import main as cli_main
-        return cli_main(["--browse", "--all"])
+        return cli_main(["--browse"])
 
 if __name__ == "__main__":
     sys.exit(main() or 0)
